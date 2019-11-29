@@ -20,17 +20,17 @@ module EmployeeCreation
       nil
     else
       begin
-        JSON.parse(reports_input).map do |attr_hash|
-          report = create_employee(attr_hash)
-          verify_employee(report)
-          report
+        reports = JSON.parse(reports_input).map do |attr_hash|
+          create_employee(attr_hash)
         end
       rescue JSON::ParserError
-        reports_input.gsub(' ', '').split(',').map do |var_in_table|
-          report = evaluate(var_in_table)
-          verify_employee(report)
-          report
+        reports = reports_input.gsub(' ', '').split(',').map do |var_in_table|
+          evaluate(var_in_table)
         end
+      end
+      
+      reports.each do |report|
+        verify_employee(report)
       end
     end
   end
