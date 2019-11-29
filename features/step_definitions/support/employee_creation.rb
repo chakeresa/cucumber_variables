@@ -17,7 +17,7 @@ module EmployeeCreation
     if reports_input == '' || reports_input.nil?
       nil
     else
-      reports_input.split(',').map do |name_in_table|
+      reports_input.gsub(' ', '').split(',').map do |name_in_table|
         report = evaluate(name_in_table)
         verify_employee(report)
         report
