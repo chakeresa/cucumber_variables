@@ -15,3 +15,19 @@ Given("the Employee") do |table|
     @employees[variable_name] = new_employee
   end
 end
+
+Then("{string} has the value {string}") do |expression, expected_value|
+  variable_name = @employees.keys.find do |key|
+    expression.start_with?(key)
+  end
+
+  actual_value = if variable_name && variable_name != expression
+    variable_value = @employees[variable_name]
+    methods = expression.gsub(/^#{Regexp.quote(variable_name)}\.?/, '')
+    variable_value.send(methods)
+  else
+    eval(expression)
+  end
+
+  expect(actual_value).to eq(expected_value)
+end
