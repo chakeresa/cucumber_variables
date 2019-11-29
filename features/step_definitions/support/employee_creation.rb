@@ -10,17 +10,27 @@ module EmployeeCreation
     )
 
     verify_employee(new_employee)
-    save_employee_to_variable(new_employee, variable_name)
+    save_employee_to_variable(new_employee, variable_name) if variable_name
+
+    new_employee
   end
 
   def employee_reports(reports_input)
     if reports_input == '' || reports_input.nil?
       nil
     else
-      reports_input.gsub(' ', '').split(',').map do |name_in_table|
-        report = evaluate(name_in_table)
-        verify_employee(report)
-        report
+      begin
+        JSON.parse(reports_input).map do |attr_hash|
+          report = create_employee(attr_hash)
+          verify_employee(report)
+          report
+        end
+      rescue JSON::ParserError
+        reports_input.gsub(' ', '').split(',').map do |var_in_table|
+          report = evaluate(var_in_table)
+          verify_employee(report)
+          report
+        end
       end
     end
   end

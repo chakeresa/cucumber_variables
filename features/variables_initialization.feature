@@ -46,6 +46,6 @@ Feature: Variables Initialialization
     detected json is automatically deserialized
     Given the Employee
       | var | name | reports        |
-      | E1  | Bob  | [{name:"bob"}] |
+      | E1  | Bob  | [{"name":"bob"}] |
     Then 'E1.reports.count' has the value '1'
     Then 'E1.reports[0].name' has the value 'bob'
