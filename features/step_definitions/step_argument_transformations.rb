@@ -4,10 +4,21 @@ Given("the Employee") do |table|
 # table.column_names => ["var", "Name"]
 # table.hashes => [{"var"=>"E1", "name"=>"Bob"}]
   table.hashes.each do |hash|
-    variable_name = hash["var"]
-    employee_name = evaluate(hash["name"])
+    variable_name = hash['var']
+    employee_name = evaluate(hash['name'])
+    reports_input = hash['reports']
 
-    new_employee = Employee.new(name: employee_name)
+    employee_reports = if reports_input == '' || reports_input.nil?
+      nil
+    else
+      reports_input.split(',').map do |name_in_table|
+        report = evaluate(name_in_table)
+        expect(report).to be_an(Employee)
+        report
+      end
+    end
+
+    new_employee = Employee.new(name: employee_name, reports: employee_reports)
     expect(new_employee).to be_an(Employee)
     expect(new_employee.name).to eq(employee_name)
 

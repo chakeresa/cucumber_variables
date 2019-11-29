@@ -3,6 +3,6 @@ class Employee
 
   def initialize(options)
     @name = options[:name]
-    @reports = []
+    @reports = options[:reports] || []
   end
 end
