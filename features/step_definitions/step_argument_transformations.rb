@@ -5,7 +5,7 @@ Given("the Employee") do |table|
 # table.hashes => [{"var"=>"E1", "name"=>"Bob"}]
   table.hashes.each do |hash|
     variable_name = hash["var"]
-    employee_name = hash["name"]
+    employee_name = evaluate(hash["name"])
 
     new_employee = Employee.new(name: employee_name)
     expect(new_employee).to be_an(Employee)
