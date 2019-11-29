@@ -6,8 +6,14 @@ module ExpressionEvaluation
 
     if variable_name && variable_name != expression
       variable_value = @employees[variable_name]
-      methods = expression.gsub(/^#{Regexp.quote(variable_name)}\.?/, '')
-      variable_value.send(methods)
+      methods = expression.gsub(/^#{Regexp.quote(variable_name)}\.?/, '').split('.')
+      chain = variable_value
+
+      methods.each do |method|
+        chain = chain.send(method)
+      end
+
+      chain
     else
       # eval(expression)
       expression
