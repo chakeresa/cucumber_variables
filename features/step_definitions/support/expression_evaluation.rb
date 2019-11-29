@@ -7,11 +7,22 @@ module ExpressionEvaluation
     if variable_name == expression
       @employees[variable_name]
     elsif variable_name != nil
-      methods = expression.gsub(/^#{Regexp.quote(variable_name)}\.?/, '').split('.')
+      methods_with_closing_bracket = expression
+       .gsub(/^#{Regexp.quote(variable_name)}\.?/, '')
+       .split(/\.|\[/)
+
+      methods = methods_with_closing_bracket.map do |dirty_method|
+        if dirty_method.end_with?(']')
+          ['[]', dirty_method.gsub(']', '').to_i]
+        else
+          dirty_method
+        end
+      end
+
       chain = @employees[variable_name]
 
       methods.each do |method|
-        chain = chain.send(method)
+        chain = chain.send(*method)
       end
 
       chain
