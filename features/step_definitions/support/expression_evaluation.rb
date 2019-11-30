@@ -29,7 +29,6 @@ module ExpressionEvaluation
     elsif expression == ''
       nil
     else
-      # eval(expression)
       expression
     end
   end
