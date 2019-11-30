@@ -1,14 +1,13 @@
 module ParentCreation
   def create_parent(klass, table_hash)
     variable_name = table_hash.delete('var')
-    # TODO: handle all table inputs iteratively
     new_parent = klass.new
 
     table_hash.each do |header, text|
       begin
         default_attr = klass.class_variable_get(:"@@#{header}")
       rescue NameError
-        default_attr = nil # TODO: or keep error?
+        throw "No template for #{header} attribute of #{klass}"
       end
 
       case default_attr.class.to_s
@@ -16,14 +15,17 @@ module ParentCreation
         parent_attr = evaluate(table_hash[header])
         new_parent.send(:"#{header}=", parent_attr)
       when 'Array'
-        # TODO: bring in child input stuff
+        child_class = default_attr[0].class
+        throw "Template array for #{header} attribute of #{klass} is empty" if child_class == NilClass
+
+        children_input_text = table_hash[header]
+        children = create_children(child_class, children_input_text)
+        new_parent.send(:"#{header}=", children)
       else
-        # TODO: throw error?
+        # TODO: handle case of single child -- like "boss"
+        throw "Unsure how to create #{header} attribute of type #{default_attr.class} for #{klass}"
       end
     end
-
-    children_input_text = table_hash['reports']
-    new_parent.reports = create_children(Employee, children_input_text)
 
     verify_class(new_parent, klass)
     save_to_variable(new_parent, variable_name) if variable_name
@@ -31,7 +33,7 @@ module ParentCreation
     new_parent
   end
 
-  # TODO: move to ExpressionEvaluation
+  # TODO: move to ExpressionEvaluation.evaluate so `children_input_text = table_hash[header]` can become `evaluate(table_hash[header])`
   def create_children(klass, input_text)
     if input_text == '' || input_text.nil?
       []
