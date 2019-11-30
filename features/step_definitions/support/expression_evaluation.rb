@@ -1,4 +1,5 @@
 module ExpressionEvaluation
+  # TODO: refactor -- break up, consider moving to a class instead of module
   def evaluate(expression)
     variable_name = @variable_storage_hash.keys.find do |key|
       expression.start_with?(key)

@@ -1,6 +1,7 @@
 module ParentCreation
   def create_parent(klass, table_hash)
     variable_name = table_hash.delete('var')
+    # TODO: handle all table inputs iteratively
     parent_name = evaluate(table_hash['name'])
     reports_input = table_hash['reports']
 
@@ -14,6 +15,7 @@ module ParentCreation
     new_parent
   end
 
+  # TODO: move to ExpressionEvaluation
   def create_children(reports_input)
     if reports_input == '' || reports_input.nil?
       []
