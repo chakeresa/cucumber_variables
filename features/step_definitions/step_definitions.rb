@@ -2,7 +2,7 @@ require './lib/employee'
 
 Given(/the Employees?/) do |table|
   table.hashes.each do |hash|
-    create_employee(hash)
+    create_parent(Employee, hash)
   end
 end
 

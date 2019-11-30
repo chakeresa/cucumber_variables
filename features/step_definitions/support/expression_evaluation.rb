@@ -1,11 +1,11 @@
 module ExpressionEvaluation
   def evaluate(expression)
-    variable_name = @employees.keys.find do |key|
+    variable_name = @variable_storage_hash.keys.find do |key|
       expression.start_with?(key)
     end rescue nil
 
     if variable_name == expression
-      @employees[variable_name]
+      @variable_storage_hash[variable_name]
     elsif variable_name != nil
       methods_with_closing_bracket = expression
        .gsub(/^#{Regexp.quote(variable_name)}\.?/, '')
@@ -19,7 +19,7 @@ module ExpressionEvaluation
         end
       end
 
-      chain = @employees[variable_name]
+      chain = @variable_storage_hash[variable_name]
 
       methods.each do |method|
         chain = chain.send(*method)

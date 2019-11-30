@@ -1,8 +1,9 @@
 class Employee
   attr_accessor :name, :reports
 
-  def initialize(options = {})
-    @name = options[:name] || 'default employee name'
-    @reports = options[:reports] || []
-  end
+  @@name = ''
+  @@reports = [Employee.new]
+  # Employee.class_variables => [:@@name, :@@reports]
+  # Employee.class_variable_get(:@@reports)
+  # Employee.class_variable_get(:"@@#{name_of_attr}")
 end
