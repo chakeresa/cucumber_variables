@@ -2,11 +2,27 @@ module ParentCreation
   def create_parent(klass, table_hash)
     variable_name = table_hash.delete('var')
     # TODO: handle all table inputs iteratively
-    parent_name = evaluate(table_hash['name'])
-    children_input_text = table_hash['reports']
-
     new_parent = klass.new
-    new_parent.name = parent_name
+
+    table_hash.each do |header, text|
+      begin
+        default_attr = klass.class_variable_get(:"@@#{header}")
+      rescue NameError
+        default_attr = nil # TODO: or keep error?
+      end
+
+      case default_attr.class.to_s
+      when 'String'
+        parent_attr = evaluate(table_hash[header])
+        new_parent.send(:"#{header}=", parent_attr)
+      when 'Array'
+        # TODO: bring in child input stuff
+      else
+        # TODO: throw error?
+      end
+    end
+
+    children_input_text = table_hash['reports']
     new_parent.reports = create_children(Employee, children_input_text)
 
     verify_class(new_parent, klass)
